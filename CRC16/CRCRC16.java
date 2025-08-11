@@ -1,0 +1,30 @@
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import godlikeblock.util.CRC16;
+public class CRCRC16 {
+	public static final CRC16 e16 = new CRC16();
+    private static final Logger logger = Logger.getLogger(CRCRC16.class.getName());
+    public static void main(String[] args) {
+        Scanner k = new Scanner(System.in);
+        String string = "";
+        String decision = "";
+        logger.log(Level.INFO,
+            "Hello and welcome to the CRC16 Encoder/Decoder. Which do you want to do, encode or decode?");
+        decision = k.nextLine();
+        if (decision.equalsIgnoreCase("encode")) {
+            logger.log(Level.INFO, "Please enter the string you wish to convert into CRC16.");
+            string = k.nextLine();
+            // encode
+            byte[] ebytes = string.getBytes();
+			int eint = e16.update(ebytes);
+			String estring = String.format("%04X", eint);
+            // output
+            logger.log(Level.INFO, "The CRC16 string of that is:\n{0}", estring);
+        } else {
+            logger.log(Level.SEVERE, "Invalid operation.");
+        }
+        k.close();
+        logger.log(Level.INFO, "Now exiting the CRC16 Encoder/Decoder...");
+    }
+}

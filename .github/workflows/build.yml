@@ -1,0 +1,160 @@
+name: Build and Release JARs
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'        # semantic version tags like v1.2.3
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    outputs:
+      jars: ${{ steps.set-jars.outputs.jars }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 24
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 24
+
+      - name: Compile and package Base32
+        run: |
+          mkdir -p out/Base32
+          javac Base32/CRBase32.java -d out/Base32
+          jar cf Base32.jar -C out/Base32 .
+
+      - name: Compile and package Base64
+        run: |
+          mkdir -p out/Base64
+          javac Base64/CRBase64.java -d out/Base64
+          jar cf Base64.jar -C out/Base64 .
+
+      - name: Compile and package Base85
+        run: |
+          mkdir -p out/Base85
+          javac Base85/CRBase85.java -d out/Base85
+          jar cf Base85.jar -C out/Base85 .
+
+      - name: Compile and package Base85EncoderOnly
+        run: |
+          mkdir -p out/Base85EncoderOnly
+          javac Base85EncoderOnly/CRBase85.java -d out/Base85EncoderOnly
+          jar cf Base85EncoderOnly.jar -C out/Base85EncoderOnly .
+
+      - name: Compile and package Base91
+        run: |
+          mkdir -p out/Base91
+          javac Base91/CRBase91.java -d out/Base91
+          jar cf Base91.jar -C out/Base91 .
+
+      - name: Compile and package Base91New
+        run: |
+          mkdir -p out/Base91New
+          javac Base91New/CRBase91.java -d out/Base91New
+          jar cf Base91New.jar -C out/Base91New .
+
+      - name: Compile and package Base93
+        run: |
+          mkdir -p out/Base93
+          javac Base93/CRBase93.java -d out/Base93
+          jar cf Base93.jar -C out/Base93 .
+
+      - name: Compile and package CRC16
+        run: |
+          mkdir -p out/CRC16
+          javac CRC16/CRCRC16.java -d out/CRC16
+          jar cf CRC16.jar -C out/CRC16 .
+
+      - name: Compile and package MD4
+        run: |
+          mkdir -p out/MD4
+          javac MD4/CRMD4.java -d out/MD4
+          jar cf MD4.jar -C out/MD4 .
+
+      - name: Compile and package XYZ
+        run: |
+          mkdir -p out/XYZ
+          javac XYZ/CRXYZ.java -d out/XYZ
+          jar cf XYZ.jar -C out/XYZ .
+
+      - name: Compile and package UUEncodeEncoderOnly
+        run: |
+          mkdir -p out/UUEncodeEncoderOnly
+          javac UUEncodeEncoderOnly/CRUUEncode.java -d out/UUEncodeEncoderOnly
+          jar cf UUEncodeEncoderOnly.jar -C out/UUEncodeEncoderOnly .
+
+      - name: Set output JAR list
+        id: set-jars
+        run: |
+          echo "jars=Base32.jar Base64.jar Base85.jar Base85EncoderOnly.jar Base91.jar Base91New.jar Base93.jar CRC16.jar MD4.jar XYZ.jar UUEncodeEncoderOnly.jar" >> $GITHUB_OUTPUT
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: jar-files
+          path: |
+            Base32.jar
+            Base64.jar
+            Base85.jar
+            Base85EncoderOnly.jar
+            Base91.jar
+            Base91New.jar
+            Base93.jar
+            CRC16.jar
+            MD4.jar
+            XYZ.jar
+            UUEncodeEncoderOnly.jar
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      github.event_name == 'push' && github.ref == 'refs/heads/main' ||
+      github.event_name == 'workflow_dispatch' ||
+      startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: jar-files
+          path: ./jars
+
+      - name: Create or update GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
+          name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('Pre-release {0}', github.sha) }}
+          draft: false
+          prerelease: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload JAR files to release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create_release.outputs.tag_name }}
+          files: |
+            jars/Base32.jar
+            jars/Base64.jar
+            jars/Base85.jar
+            jars/Base85EncoderOnly.jar
+            jars/Base91.jar
+            jars/Base91New.jar
+            jars/Base93.jar
+            jars/CRC16.jar
+            jars/MD4.jar
+            jars/XYZ.jar
+            jars/UUEncodeEncoderOnly.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
