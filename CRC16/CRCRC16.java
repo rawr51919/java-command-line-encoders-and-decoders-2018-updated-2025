@@ -8,11 +8,6 @@ public class CRCRC16 {
     public static void main(String[] args) {
         Scanner k = new Scanner(System.in);
         String string = "";
-        String decision = "";
-        logger.log(Level.INFO,
-            "Hello and welcome to the CRC16 Encoder/Decoder. Which do you want to do, encode or decode?");
-        decision = k.nextLine();
-        if (decision.equalsIgnoreCase("encode")) {
             logger.log(Level.INFO, "Please enter the string you wish to convert into CRC16.");
             string = k.nextLine();
             // encode
@@ -21,9 +16,6 @@ public class CRCRC16 {
 			String estring = String.format("%04X", eint);
             // output
             logger.log(Level.INFO, "The CRC16 string of that is:\n{0}", estring);
-        } else {
-            logger.log(Level.SEVERE, "Invalid operation.");
-        }
         k.close();
         logger.log(Level.INFO, "Now exiting the CRC16 Encoder/Decoder...");
     }
