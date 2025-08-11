@@ -20,6 +20,8 @@ public class CRXYZ {
 			xyzstring = Hexdump.toHexString(xyzbytes, 0, xyzbytes.length * 2);
 			logger.log(Level.INFO, "The XYZ hash of the string you entered was: {0}", xyzstring);
 			logger.log(Level.INFO, "Do you want to hash another string? (y/n)");
+			decision = k.next();
+			k.nextLine();
 		} while (decision.equalsIgnoreCase("y"));
 		logger.log(Level.INFO, "Exiting the XYZ Hasher...");
 		k.close();
