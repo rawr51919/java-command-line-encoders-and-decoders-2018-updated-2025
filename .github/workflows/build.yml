@@ -171,17 +171,16 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
-          name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('Pre-release {0}', github.sha) }}
+          tag_name: build-${{ github.run_number }}
+          prerelease: ${{ github.event.inputs.release_type != 'main' }}
           draft: false
-          prerelease: ${{ steps.prerelease_flag.outputs.prerelease }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload JAR files to release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
+          tag_name: build-${{ github.run_number }}
           files: |
             jars/Base32.jar
             jars/Base64.jar
