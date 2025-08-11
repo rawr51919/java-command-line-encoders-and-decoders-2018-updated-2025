@@ -36,76 +36,76 @@ jobs:
           mkdir -p out/Base32
           shopt -s globstar
           javac Base32/**/*.java -d out/Base32
-          jar cfe Base32.jar Base32.CRBase32 -C out/Base32 .
+          jar cfe Base32.jar CRBase32 -C out/Base32 .
 
       - name: Compile and package Base64
         run: |
           mkdir -p out/Base64
           javac Base64/CRBase64.java -d out/Base64
-          jar cfe Base64.jar Base64.CRBase64 -C out/Base64 .
+          jar cfe Base64.jar CRBase64 -C out/Base64 .
 
       - name: Compile and package Base85 (with local com.orwell.util sources)
         run: |
           mkdir -p out/Base85
           shopt -s globstar
           javac Base85/**/*.java -d out/Base85
-          jar cfe Base85.jar Base85.CRBase85 -C out/Base85 .
+          jar cfe Base85.jar CRBase85 -C out/Base85 .
 
       - name: Compile and package Base85EncoderOnly
         run: |
           mkdir -p out/Base85EncoderOnly
           shopt -s globstar
           javac Base85EncoderOnly/**/*.java -d out/Base85EncoderOnly
-          jar cfe Base85EncoderOnly.jar Base85EncoderOnly.CRBase85 -C out/Base85EncoderOnly .
+          jar cfe Base85EncoderOnly.jar CRBase85 -C out/Base85EncoderOnly .
 
       - name: Compile and package Base91 (with dependency)
         run: |
           mkdir -p out/Base91
           shopt -s globstar
           javac Base91/**/*.java -d out/Base91
-          jar cfe Base91.jar Base91.CRBase91 -C out/Base91 .
+          jar cfe Base91.jar CRBase91 -C out/Base91 .
 
       - name: Compile and package Base91New (with dependencies)
         run: |
           mkdir -p out/Base91New
           shopt -s globstar
           javac Base91New/**/*.java -d out/Base91New
-          jar cfe Base91New.jar Base91New.CRBase91 -C out/Base91New .
+          jar cfe Base91New.jar CRBase91 -C out/Base91New .
 
       - name: Compile and package Base93 (with dependencies)
         run: |
           mkdir -p out/Base93
           shopt -s globstar
           javac Base93/**/*.java -d out/Base93
-          jar cfe Base93.jar Base93.CRBase93 -C out/Base93 .
+          jar cfe Base93.jar CRBase93 -C out/Base93 .
 
       - name: Compile and package CRC16 (with dependencies)
         run: |
           mkdir -p out/CRC16
           shopt -s globstar
           javac CRC16/**/*.java -d out/CRC16
-          jar cfe CRC16.jar CRC16.CRCRC16 -C out/CRC16 .
+          jar cfe CRC16.jar CRCRC16 -C out/CRC16 .
 
       - name: Compile and package MD4 (with dependencies)
         run: |
           mkdir -p out/MD4
           shopt -s globstar
           javac MD4/**/*.java -d out/MD4
-          jar cfe MD4.jar MD4.CRMD4 -C out/MD4 .
+          jar cfe MD4.jar CRMD4 -C out/MD4 .
 
       - name: Compile and package XYZ (with dependencies)
         run: |
           mkdir -p out/XYZ
           shopt -s globstar
           javac XYZ/**/*.java -d out/XYZ
-          jar cfe XYZ.jar XYZ.CRXYZ -C out/XYZ .
+          jar cfe XYZ.jar CRXYZ -C out/XYZ .
 
       - name: Compile and package UUEncodeEncoderOnly (with dependencies)
         run: |
           mkdir -p out/UUEncodeEncoderOnly
           shopt -s globstar
           javac UUEncodeEncoderOnly/**/*.java -d out/UUEncodeEncoderOnly
-          jar cfe UUEncodeEncoderOnly.jar UUEncodeEncoderOnly.CRUUEncode -C out/UUEncodeEncoderOnly .
+          jar cfe UUEncodeEncoderOnly.jar CRUUEncode -C out/UUEncodeEncoderOnly .
 
 
       - name: Set output JAR list
