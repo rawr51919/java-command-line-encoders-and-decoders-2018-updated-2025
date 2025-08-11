@@ -8,6 +8,11 @@ on:
       - 'v*'        # semantic version tags like v1.2.3
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Set to "release" for full release; else pre-release'
+        required: false
+        default: ''
 
 jobs:
   build:
@@ -26,10 +31,10 @@ jobs:
           distribution: temurin
           java-version: 24
 
-      - name: Compile and package Base32
+      - name: Compile and package Base32 (with dependency)
         run: |
           mkdir -p out/Base32
-          javac Base32/CRBase32.java -d out/Base32
+          javac Base32/*.java -d out/Base32
           jar cf Base32.jar -C out/Base32 .
 
       - name: Compile and package Base64
@@ -38,58 +43,58 @@ jobs:
           javac Base64/CRBase64.java -d out/Base64
           jar cf Base64.jar -C out/Base64 .
 
-      - name: Compile and package Base85
+      - name: Compile and package Base85 (with local com.orwell.util sources)
         run: |
           mkdir -p out/Base85
-          javac Base85/CRBase85.java -d out/Base85
+          javac Base85/*.java -d out/Base85
           jar cf Base85.jar -C out/Base85 .
 
       - name: Compile and package Base85EncoderOnly
         run: |
           mkdir -p out/Base85EncoderOnly
-          javac Base85EncoderOnly/CRBase85.java -d out/Base85EncoderOnly
+          javac Base85EncoderOnly/*.java -d out/Base85EncoderOnly
           jar cf Base85EncoderOnly.jar -C out/Base85EncoderOnly .
 
-      - name: Compile and package Base91
+      - name: Compile and package Base91 (with dependency)
         run: |
           mkdir -p out/Base91
-          javac Base91/CRBase91.java -d out/Base91
+          javac Base91/*.java -d out/Base91
           jar cf Base91.jar -C out/Base91 .
 
-      - name: Compile and package Base91New
+      - name: Compile and package Base91New (with dependencies)
         run: |
           mkdir -p out/Base91New
-          javac Base91New/CRBase91.java -d out/Base91New
+          javac Base91New/*.java -d out/Base91New
           jar cf Base91New.jar -C out/Base91New .
 
-      - name: Compile and package Base93
+      - name: Compile and package Base93 (with dependencies)
         run: |
           mkdir -p out/Base93
-          javac Base93/CRBase93.java -d out/Base93
+          javac Base93/*.java -d out/Base93
           jar cf Base93.jar -C out/Base93 .
 
-      - name: Compile and package CRC16
+      - name: Compile and package CRC16 (with dependencies)
         run: |
           mkdir -p out/CRC16
-          javac CRC16/CRCRC16.java -d out/CRC16
+          javac CRC16/*.java -d out/CRC16
           jar cf CRC16.jar -C out/CRC16 .
 
-      - name: Compile and package MD4
+      - name: Compile and package MD4 (with dependencies)
         run: |
           mkdir -p out/MD4
-          javac MD4/CRMD4.java -d out/MD4
+          javac MD4/*.java -d out/MD4
           jar cf MD4.jar -C out/MD4 .
 
-      - name: Compile and package XYZ
+      - name: Compile and package XYZ (with dependencies)
         run: |
           mkdir -p out/XYZ
-          javac XYZ/CRXYZ.java -d out/XYZ
+          javac XYZ/*.java -d out/XYZ
           jar cf XYZ.jar -C out/XYZ .
 
-      - name: Compile and package UUEncodeEncoderOnly
+      - name: Compile and package UUEncodeEncoderOnly (with dependencies)
         run: |
           mkdir -p out/UUEncodeEncoderOnly
-          javac UUEncodeEncoderOnly/CRUUEncode.java -d out/UUEncodeEncoderOnly
+          javac UUEncodeEncoderOnly/*.java -d out/UUEncodeEncoderOnly
           jar cf UUEncodeEncoderOnly.jar -C out/UUEncodeEncoderOnly .
 
       - name: Set output JAR list
@@ -129,6 +134,26 @@ jobs:
           name: jar-files
           path: ./jars
 
+      - name: Determine prerelease flag
+        id: prerelease_flag
+        run: |
+          prerelease=false
+          if [[ ! "${GITHUB_REF}" =~ ^refs/tags/v ]]; then
+            prerelease=true
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            release_type="${{ github.event.inputs.release_type }}"
+            if [[ "$release_type" != "release" ]]; then
+              prerelease=true
+            else
+              prerelease=false
+            fi
+          fi
+
+          echo "prerelease=$prerelease" >> $GITHUB_OUTPUT
+        shell: bash
+
       - name: Create or update GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v2
@@ -136,14 +161,14 @@ jobs:
           tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
           name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('Pre-release {0}', github.sha) }}
           draft: false
-          prerelease: ${{ !(startsWith(github.ref, 'refs/tags/v')) }}
+          prerelease: ${{ steps.prerelease_flag.outputs.prerelease }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload JAR files to release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.create_release.outputs.tag_name }}
+          tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
           files: |
             jars/Base32.jar
             jars/Base64.jar
