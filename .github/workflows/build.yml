@@ -57,7 +57,7 @@ jobs:
           mkdir -p out/Base85EncoderOnly
           shopt -s globstar
           javac Base85EncoderOnly/**/*.java -d out/Base85EncoderOnly
-          jar cfe Base85EncoderOnly.jar CRBase85 -C out/Base85EncoderOnly .
+          jar cfe Base85EncoderOnly.jar CRBase85EncoderOnly -C out/Base85EncoderOnly .
 
       - name: Compile and package Base91 (with dependency)
         run: |
