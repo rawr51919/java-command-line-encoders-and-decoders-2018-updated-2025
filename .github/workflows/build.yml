@@ -131,7 +131,7 @@ jobs:
 
       - name: Create or update GitHub Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('pre-release-{0}', github.sha) }}
           name: ${{ (github.ref_name != '' && startsWith(github.ref, 'refs/tags/v')) && github.ref_name || format('Pre-release {0}', github.sha) }}
@@ -141,7 +141,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload JAR files to release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.create_release.outputs.tag_name }}
           files: |
