@@ -31,7 +31,7 @@ public class CRBase64 {
                 logEncoded(Base64.getEncoder().encode(k.nextLine().getBytes()), "Basic Base64");
                 break;
 
-            case "url/filename safe":
+            case "url and filename safe":
                 logger.log(Level.INFO, "Please enter the string you wish to convert into URL/Filename safe Base64.");
                 logEncoded(Base64.getUrlEncoder().encode(k.nextLine().getBytes()), "URL/Filename safe Base64");
                 break;
@@ -56,7 +56,7 @@ public class CRBase64 {
                 logDecoded(Base64.getDecoder().decode(k.nextLine()), "Basic Base64");
                 break;
 
-            case "url/filename safe":
+            case "url and filename safe":
                 logger.log(Level.INFO,
                         "Please enter the URL/Filename safe Base64 string you wish to convert back into a string.");
                 logDecoded(Base64.getUrlDecoder().decode(k.nextLine()), "URL/Filename safe Base64");
