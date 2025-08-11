@@ -34,6 +34,7 @@ jobs:
       - name: Compile and package Base32 (with dependency)
         run: |
           mkdir -p out/Base32
+          shopt -s globstar
           javac Base32/**/*.java -d out/Base32
           jar cf Base32.jar -C out/Base32 .
 
@@ -46,54 +47,63 @@ jobs:
       - name: Compile and package Base85 (with local com.orwell.util sources)
         run: |
           mkdir -p out/Base85
+          shopt -s globstar
           javac Base85/**/*.java -d out/Base85
           jar cf Base85.jar -C out/Base85 .
 
       - name: Compile and package Base85EncoderOnly
         run: |
           mkdir -p out/Base85EncoderOnly
+          shopt -s globstar
           javac Base85EncoderOnly/**/*.java -d out/Base85EncoderOnly
           jar cf Base85EncoderOnly.jar -C out/Base85EncoderOnly .
 
       - name: Compile and package Base91 (with dependency)
         run: |
           mkdir -p out/Base91
+          shopt -s globstar
           javac Base91/**/*.java -d out/Base91
           jar cf Base91.jar -C out/Base91 .
 
       - name: Compile and package Base91New (with dependencies)
         run: |
           mkdir -p out/Base91New
+          shopt -s globstar
           javac Base91New/**/*.java -d out/Base91New
           jar cf Base91New.jar -C out/Base91New .
 
       - name: Compile and package Base93 (with dependencies)
         run: |
           mkdir -p out/Base93
+          shopt -s globstar
           javac Base93/**/*.java -d out/Base93
           jar cf Base93.jar -C out/Base93 .
 
       - name: Compile and package CRC16 (with dependencies)
         run: |
           mkdir -p out/CRC16
+          shopt -s globstar
           javac CRC16/**/*.java -d out/CRC16
           jar cf CRC16.jar -C out/CRC16 .
 
       - name: Compile and package MD4 (with dependencies)
         run: |
           mkdir -p out/MD4
+          shopt -s globstar
           javac MD4/**/*.java -d out/MD4
           jar cf MD4.jar -C out/MD4 .
 
       - name: Compile and package XYZ (with dependencies)
         run: |
           mkdir -p out/XYZ
+          shopt -s globstar
           javac XYZ/**/*.java -d out/XYZ
           jar cf XYZ.jar -C out/XYZ .
 
       - name: Compile and package UUEncodeEncoderOnly (with dependencies)
         run: |
           mkdir -p out/UUEncodeEncoderOnly
+          shopt -s globstar
           javac UUEncodeEncoderOnly/**/*.java -d out/UUEncodeEncoderOnly
           jar cf UUEncodeEncoderOnly.jar -C out/UUEncodeEncoderOnly .
 
