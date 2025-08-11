@@ -57,7 +57,8 @@ public class UUEncoder implements Encoder {
 				off += MAX_CHARS_PER_LINE;
 			} else {
 				// last line. Encode the partial and quit
-				byteCount += encodeLine(data, off, MAX_CHARS_PER_LINE, out);
+				// Fix: pass the actual remaining length, not MAX_CHARS_PER_LINE
+				byteCount += encodeLine(data, off, length, out);
 				break;
 			}
 		}
@@ -79,12 +80,12 @@ public class UUEncoder implements Encoder {
 		// write out the number of characters encoded in this line.
 		out.write((byte) ((length & 0x3F) + ' '));
 
-		int bytesWritten = 2; // one for the length, one for the line terminator
+		int bytesWritten = 2; // one for the length byte, one for the line terminator
 
 		for (int i = 0; i < length; i += 3) {
 			byte a = data[offset + i];
-			byte b = (i + 1 < length) ? data[offset + i + 1] : 1;
-			byte c = (i + 2 < length) ? data[offset + i + 2] : 1;
+			byte b = (offset + i + 1 < data.length) ? data[offset + i + 1] : 1;
+			byte c = (offset + i + 2 < data.length) ? data[offset + i + 2] : 1;
 
 			byte d1 = (byte) (((a >>> 2) & 0x3F) + ' ');
 			byte d2 = (byte) ((((a << 4) & 0x30) | ((b >>> 4) & 0x0F)) + ' ');

@@ -11,7 +11,7 @@ public class CRUUEncode {
 																							// encode
 		string = k.nextLine();
 		// now we try to encode the string that was entered in the UUEncode encoder
-		byte[] estring = UUEncode.encode(string.getBytes(), 0, string.getBytes().length - 1);
+		byte[] estring = UUEncode.encode(string.getBytes(), 0, string.getBytes().length);
 		// and spit it out
 		logger.log(Level.INFO, "The UUEncode string of that is: \n{0}", estring);
 		k.close();
