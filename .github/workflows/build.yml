@@ -38,10 +38,10 @@ jobs:
           javac Adler32/CRAdler32.java -d out/Adler32
           jar cfe Adler32.jar CRAdler32 -C out/Adler32 .
 
-      - name: Compile and package CRCRC32
+      - name: Compile and package CRC32
         run: |
           mkdir -p out/CRC32
-          javac Adler32/CRCRC32.java -d out/CRC32
+          javac CRC32/CRCRC32.java -d out/CRC32
           jar cfe CRC32.jar CRCRC32 -C out/CRC32 .
 
       - name: Compile and package Base32 (with dependency)
