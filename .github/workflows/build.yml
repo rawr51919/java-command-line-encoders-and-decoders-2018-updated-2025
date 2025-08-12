@@ -32,6 +32,18 @@ jobs:
           distribution: temurin
           java-version: 24
 
+      - name: Compile and package Adler32
+        run: |
+          mkdir -p out/Adler32
+          javac Adler32/CRAdler32.java -d out/Adler32
+          jar cfe Adler32.jar CRAdler32 -C out/Adler32 .
+
+      - name: Compile and package CRCRC32
+        run: |
+          mkdir -p out/CRC32
+          javac Adler32/CRCRC32.java -d out/CRC32
+          jar cfe CRC32.jar CRCRC32 -C out/CRC32 .
+
       - name: Compile and package Base32 (with dependency)
         run: |
           mkdir -p out/Base32
@@ -112,13 +124,15 @@ jobs:
       - name: Set output JAR list
         id: set-jars
         run: |
-          echo "jars=Base32.jar Base64.jar Base85.jar Base85EncoderOnly.jar Base91.jar Base91New.jar Base93.jar CRC16.jar MD4.jar XYZ.jar UUEncodeEncoderOnly.jar" >> $GITHUB_OUTPUT
+          echo "jars=Adler32.jar CRC32.jar Base32.jar Base64.jar Base85.jar Base85EncoderOnly.jar Base91.jar Base91New.jar Base93.jar CRC16.jar MD4.jar XYZ.jar UUEncodeEncoderOnly.jar" >> $GITHUB_OUTPUT
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: jar-files
           path: |
+            Adler32.jar
+            CRC32.jar
             Base32.jar
             Base64.jar
             Base85.jar
@@ -151,6 +165,8 @@ jobs:
           tag_name: build-${{ github.run_number }}
           prerelease: ${{ github.event.inputs.release_type != 'main' }}
           files: |
+            jars/Adler32.jar
+            jars/CRC32.jar
             jars/Base32.jar
             jars/Base64.jar
             jars/Base85.jar
