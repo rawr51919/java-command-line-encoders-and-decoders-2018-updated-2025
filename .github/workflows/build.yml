@@ -127,7 +127,7 @@ jobs:
           echo "jars=Adler32.jar CRC32.jar Base32.jar Base64.jar Base85.jar Base85EncoderOnly.jar Base91.jar Base91New.jar Base93.jar CRC16.jar MD4.jar XYZ.jar UUEncodeEncoderOnly.jar" >> $GITHUB_OUTPUT
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: jar-files
           path: |
@@ -154,7 +154,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: jar-files
           path: ./jars
